@@ -1,8 +1,10 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -15,7 +17,7 @@ class SolutionGenerator {
 
     String fileContents = readFile("solution_placeholder.txt");
     writeToFileSub(filename, fileContents);
-
+    pushToGithub(filename);
     //System.out.println(fileContents);
   }
 
@@ -41,7 +43,7 @@ class SolutionGenerator {
       myReader.close();
       return res;
     } catch (FileNotFoundException e) {
-      System.out.println("An error occurred.");
+      System.out.println("An error occurred during file read.");
       e.printStackTrace();
       return "";
     }
@@ -54,7 +56,7 @@ class SolutionGenerator {
       myWriter.close();
       System.out.println("Successfully wrote to the file.");
     } catch (IOException e) {
-      System.out.println("An error occurred.");
+      System.out.println("An error occurred during file write.");
       e.printStackTrace();
     }
   }
@@ -66,7 +68,29 @@ class SolutionGenerator {
       myWriter.close();
       System.out.println("Successfully wrote to the file.");
     } catch (IOException e) {
-      System.out.println("An error occurred.");
+      System.out.println("An error occurred during file write to sub directory.");
+      e.printStackTrace();
+    }
+  }
+
+  public static void pushToGithub(String filename) {
+    try {
+      String command1 = "git add .";
+      String command2 = "git commit -m Added " + filename;
+      String command3 = "git push origin main";
+      String combinedCommands = command1 + " && " + command2 + " && " + command3;
+      ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", combinedCommands);
+      builder.redirectErrorStream(true);
+      Process p = builder.start();
+      BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+      String line;
+      while (true) {
+          line = r.readLine();
+          if (line == null) { break; }
+          System.out.println(line);
+      }
+    }catch(Exception e) {
+      System.out.println("An error occurred during push to github.");
       e.printStackTrace();
     }
   }

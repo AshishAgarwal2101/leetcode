@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Scanner;
 
 class SolutionGenerator {
@@ -75,12 +76,11 @@ class SolutionGenerator {
 
   public static void pushToGithub(String filename) {
     try {
-      String command1 = "git add .";
-      String command2 = "git commit -m Added " + filename;
-      String command3 = "git push origin main";
-      String combinedCommands = command1 + " && " + command2 + " && " + command3;
-      ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", combinedCommands);
+      ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "push_to_git.bat");
+      Map<String, String> env = builder.environment();
+      env.put("filename", filename);
       builder.redirectErrorStream(true);
+
       Process p = builder.start();
       BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line;

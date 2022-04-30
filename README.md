@@ -6,7 +6,8 @@
 * Fork this repository and clone it in your local.
 * Empty the ***solutions*** directory.
 * Make sure that the current repository is linked with remote origin and git is setup properly with *main* branch.
-* Run/double-click *push_to_git.bat*.
+* Run/double-click the file *push_to_git.bat*.
+
 
 
 > Pushing a new solution:

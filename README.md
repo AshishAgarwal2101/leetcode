@@ -1,9 +1,16 @@
 # Solutions to Leetcode Problems
 
-> How to use this?
+> One Time setup:
 
 * Make sure you have JDK setup in your system.
+* Fork this repository and clone it in your local.
+* Empty the ***solutions*** directory.
 * Make sure that the current repository is linked with remote origin and git is setup properly with *main* branch.
+* Run/double-click *push_to_git.bat*.
+
+
+> Pushing a new solution:
+
 * Copy the **leetcode** problem description and replace contents of file ***solution_placeholder.txt***
 * Next, Add some *s in a new line, like this: *********
 * Paste the solution in a new line.

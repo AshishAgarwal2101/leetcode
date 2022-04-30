@@ -6,4 +6,4 @@
 * Copy the **leetcode** problem description and replace contents of file ***solution_placeholder.txt***
 * Next, Add some *s in a new line, like this: *********
 * Paste the solution in a new line.
-* Lastly, run the file  SolutionGenerator.java. It prompt for a file name.
+* Lastly, run the file  *SolutionGenerator.java.* It prompts for a file name.

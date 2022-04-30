@@ -35,7 +35,7 @@ class SolutionGenerator {
           res += "\n*/\n\n";
         }
         else if(isJavaDoc) {
-          res += "\n *" + newDataLine;
+          res += "\n * " + newDataLine;
         }
         else {
           res += "\n" + newDataLine;

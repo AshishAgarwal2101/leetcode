@@ -1,0 +1,2 @@
+javac SolutionGenerator.java
+java SolutionGenerator

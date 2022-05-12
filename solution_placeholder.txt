@@ -1,59 +1,50 @@
-350. Intersection of Two Arrays II::::::::
+121. Best Time to Buy and Sell Stock::::::::::
 
-Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must appear as many times as it shows in both arrays and you may return the result in any order.
+You are given an array prices where prices[i] is the price of a given stock on the ith day.
+
+You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
+
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
 
  
 
 Example 1:
 
-Input: nums1 = [1,2,2,1], nums2 = [2,2]
-Output: [2,2]
+Input: prices = [7,1,5,3,6,4]
+Output: 5
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
 
 Example 2:
 
-Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
-Output: [4,9]
-Explanation: [9,4] is also accepted.
+Input: prices = [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transactions are done and the max profit = 0.
  
 
 Constraints:
 
-1 <= nums1.length, nums2.length <= 1000
-0 <= nums1[i], nums2[i] <= 1000
- 
-
-Follow up:
-
-What if the given array is already sorted? How would you optimize your algorithm?
-What if nums1's size is small compared to nums2's size? Which algorithm is better?
-What if elements of nums2 are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?
+1 <= prices.length <= 105
+0 <= prices[i] <= 104
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    public int[] intersect(int[] nums1, int[] nums2) {
-        //question clarification: Intersection does not refer to continuous sub-array
-        //intersection simply referss to common elements
+    public int maxProfit(int[] prices) {
+        int min = Integer.MAX_VALUE;
+        int maxContDiff = 0;
         
-        Map<Integer, Integer> nums1Count = new HashMap<>(); //<number, count>
-        List<Integer> res = new ArrayList<>();
-        
-        for(int i=0; i<nums1.length; i++){
-            Integer count = nums1Count.get(nums1[i]);
-            if(count == null) count = 0;
-            nums1Count.put(nums1[i], count+1);
-        }
-        
-        for(int i=0; i<nums2.length; i++){
-            Integer count = nums1Count.get(nums2[i]);
-            if(count != null && count != 0){
-                nums1Count.put(nums2[i], count-1);
-                res.add(nums2[i]);
+        for(int i=0; i<prices.length; i++){
+            if((prices[i] - min) > maxContDiff){
+                maxContDiff = prices[i] - min;
+            }
+            if(prices[i] < min){
+                min = prices[i];
             }
         }
         
-        return res.stream().mapToInt(i -> i).toArray();
+        return maxContDiff;
     }
 }

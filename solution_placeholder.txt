@@ -1,77 +1,46 @@
-383. Ransom Note::::::::::
+242. Valid Anagram:::::::::
 
-Given two strings ransomNote and magazine, return true if ransomNote can be constructed from magazine and false otherwise.
+Given two strings s and t, return true if t is an anagram of s, and false otherwise.
 
-Each letter in magazine can only be used once in ransomNote.
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 
  
 
 Example 1:
 
-Input: ransomNote = "a", magazine = "b"
-Output: false
+Input: s = "anagram", t = "nagaram"
+Output: true
 
 Example 2:
 
-Input: ransomNote = "aa", magazine = "ab"
+Input: s = "rat", t = "car"
 Output: false
-
-Example 3:
-
-Input: ransomNote = "aa", magazine = "aab"
-Output: true
  
 
 Constraints:
 
-1 <= ransomNote.length, magazine.length <= 105
-ransomNote and magazine consist of lowercase English letters.
+1 <= s.length, t.length <= 5 * 104
+s and t consist of lowercase English letters.
+ 
+
+Follow up: What if the inputs contain Unicode characters? How would you adapt your solution to such a case?
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    /* 
-    ----------------Old solution------------------------
-    public boolean canConstruct(String ransomNote, String magazine) {
-        Map<Character, Integer> magazineCharacterCount = new HashMap<>();
-        Map<Character, Integer> noteCharacterCount = new HashMap<>();
+    //Similar to Ransom Note problem, only difference being that the lengths of both strings must be same
+    public boolean isAnagram(String s, String t) {
+        if(s.length() != t.length()) return false;
         
-        for(int i=0; i<magazine.length(); i++){
-            char ch = magazine.charAt(i);
-            Integer count = magazineCharacterCount.get(ch);
-            if(count == null){
-                count = 0;
-            }
-            magazineCharacterCount.put(ch, count+1);
-        }
-        
-        for(int i=0; i<ransomNote.length(); i++){
-            char ch = ransomNote.charAt(i);
-            Integer count = noteCharacterCount.get(ch);
-            Integer mCount = magazineCharacterCount.get(ch);
-            if(count == null){
-                count = 0;
-            }
-            if(mCount == null || count+1 > mCount){
-                return false;
-            }
-            noteCharacterCount.put(ch, count+1);
-        }
-        
-        return true;
-    }
-    */
-    
-    public boolean canConstruct(String ransomNote, String magazine) {
         int[] charCount = new int[26];
-        for(int i=0; i<magazine.length(); i++){
-            char ch = magazine.charAt(i);
+        for(int i=0; i<s.length(); i++){
+            char ch = s.charAt(i);
             charCount[ch-'a']++;
         }
-        for(int i=0; i<ransomNote.length(); i++){
-            char ch = ransomNote.charAt(i);
+        for(int i=0; i<t.length(); i++){
+            char ch = t.charAt(i);
             if(charCount[ch - 'a'] == 0){
                 return false;
             }

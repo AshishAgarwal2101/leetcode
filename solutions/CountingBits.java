@@ -50,15 +50,15 @@ class Solution {
         res[0] = 0;
         for(int i=1; i<=n; i++){
             /**
-            * even number has same no. of bits as half the no.
-            * in bit representation, a number "n" has an extra "0" at the end compared to "n/2"
-            * e.g. 3=11, then 6=110 ;;;; 2=10, then 4=100
+             * even number has same no. of bits as half the no.
+             * in bit representation, a number "n" has an extra "0" at the end compared to "n/2"
+             * e.g. 3=11, then 6=110 ;;;; 2=10, then 4=100
             */
             
             /**
-            * odd no. has an extra bit compared to half the no. (even part)
-            * in bit representation, a number "n" has an extra "1" at the end compared to "n/2"
-            * e.g. 3=11, then 7=111 ;;;; 2=10, then 5=101
+             * odd no. has an extra bit compared to half the no. (even part)
+             * in bit representation, a number "n" has an extra "1" at the end compared to "n/2"
+             * e.g. 3=11, then 7=111 ;;;; 2=10, then 5=101
             */
             
             if(i%2 == 0){

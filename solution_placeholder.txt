@@ -1,83 +1,100 @@
-207. Course Schedule:::::::::
+208. Implement Trie (Prefix Tree)::::::::::
 
-There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+A trie (pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
 
-For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
-Return true if you can finish all courses. Otherwise, return false.
+Implement the Trie class:
 
+Trie() Initializes the trie object.
+void insert(String word) Inserts the string word into the trie.
+boolean search(String word) Returns true if the string word is in the trie (i.e., was inserted before), and false otherwise.
+boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.
  
 
 Example 1:
 
-Input: numCourses = 2, prerequisites = [[1,0]]
-Output: true
-Explanation: There are a total of 2 courses to take. 
-To take course 1 you should have finished course 0. So it is possible.
+Input
+["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
+[[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
+Output
+[null, null, true, false, true, null, true]
 
-Example 2:
-
-Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
-Output: false
-Explanation: There are a total of 2 courses to take. 
-To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+Explanation
+Trie trie = new Trie();
+trie.insert("apple");
+trie.search("apple");   // return True
+trie.search("app");     // return False
+trie.startsWith("app"); // return True
+trie.insert("app");
+trie.search("app");     // return True
  
 
 Constraints:
 
-1 <= numCourses <= 2000
-0 <= prerequisites.length <= 5000
-prerequisites[i].length == 2
-0 <= ai, bi < numCourses
-All the pairs prerequisites[i] are unique.
+1 <= word.length, prefix.length <= 2000
+word and prefix consist only of lowercase English letters.
+At most 3 * 104 calls in total will be made to insert, search, and startsWith.
 
 *****************************************************************
 
 import java.util.*;
 
-class Solution {
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        ArrayList<Integer>[] courses = new ArrayList[numCourses];
-        for(int i=0; i<numCourses; i++){
-            courses[i] = new ArrayList<Integer>();
-        }
-        for(int i=0; i<prerequisites.length; i++){
-            ArrayList<Integer> course = courses[prerequisites[i][0]];
-            course.add(prerequisites[i][1]);
+class Node {
+    Node[] next;
+    boolean isTerminal;
+    
+    Node(){
+        next = new Node[26];
+        isTerminal = false;
+    }
+}
+
+class Trie {
+    Node head;
+    public Trie() {
+        head = new Node();
+    }
+    
+    public void insert(String word) {
+        Node curr = head;
+        for(char ch:word.toCharArray()){
+            if(curr.next[ch - 'a'] == null){
+                curr.next[ch - 'a'] = new Node();
+            }
+            curr = curr.next[ch - 'a'];
         }
         
-        boolean[] visited = new boolean[numCourses];
-        for(int i=0; i<numCourses; i++){
-            if(!visited[i]){
-                ArrayList<Integer> course = courses[i];
-                boolean[] cycleVisited = new boolean[numCourses];
-                if(isCycle(courses, i, cycleVisited, visited)){
-                    return false;
-                }
+        curr.isTerminal = true;
+    }
+    
+    public boolean search(String word) {
+        Node curr = head;
+        for(char ch:word.toCharArray()){
+            if(curr.next[ch - 'a'] == null){
+                return false;
             }
+            curr = curr.next[ch - 'a'];
+        }
+        
+        return curr.isTerminal;
+    }
+    
+    public boolean startsWith(String prefix) {
+        Node curr = head;
+        for(char ch:prefix.toCharArray()){
+            if(curr.next[ch - 'a'] == null){
+                return false;
+            }
+            curr = curr.next[ch - 'a'];
         }
         
         return true;
     }
-    
-    public boolean isCycle(ArrayList<Integer>[] courses, int currCourseNum, boolean[] cycleVisited, boolean[] visited){
-        if(cycleVisited[currCourseNum]){
-            return true;
-        }
-        if(visited[currCourseNum]){
-            return false;
-        }
-        
-        visited[currCourseNum] = true;
-        
-        ArrayList<Integer> course = courses[currCourseNum];
-        cycleVisited[currCourseNum] = true;
-        for(int courseNum:course){
-            if(isCycle(courses, courseNum, cycleVisited, visited)){
-                return true;
-            }
-        }
-        
-        cycleVisited[currCourseNum] = false;
-        return false;
-    }
 }
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie obj = new Trie();
+ * obj.insert(word);
+ * boolean param_2 = obj.search(word);
+ * boolean param_3 = obj.startsWith(prefix);
+ */

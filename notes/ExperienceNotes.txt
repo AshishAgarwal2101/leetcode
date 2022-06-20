@@ -1,0 +1,6 @@
+Binary Search Tree:
+1. Inorder traversal gives sorted lost.
+
+
+Others:
+1. For sorted array, 2 pointer approach can be used for finding 2 numbers of interest.

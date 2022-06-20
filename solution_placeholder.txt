@@ -1,56 +1,54 @@
-557. Reverse Words in a String III:::::
+876. Middle of the Linked List:::::::::::
 
-Given a string s, reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.
+Given the head of a singly linked list, return the middle node of the linked list.
+
+If there are two middle nodes, return the second middle node.
 
  
 
 Example 1:
 
-Input: s = "Let's take LeetCode contest"
-Output: "s'teL ekat edoCteeL tsetnoc"
+Input: head = [1,2,3,4,5]
+Output: [3,4,5]
+Explanation: The middle node of the list is node 3.
 
 Example 2:
 
-Input: s = "God Ding"
-Output: "doG gniD"
+
+Input: head = [1,2,3,4,5,6]
+Output: [4,5,6]
+Explanation: Since the list has two middle nodes with values 3 and 4, we return the second one.
  
 
 Constraints:
 
-1 <= s.length <= 5 * 104
-s contains printable ASCII characters.
-s does not contain any leading or trailing spaces.
-There is at least one word in s.
-All the words in s are separated by a single space.
+The number of nodes in the list is in the range [1, 100].
+1 <= Node.val <= 100
 
 *****************************************************************
 
 import java.util.*;
 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
 class Solution {
-    public String reverseWords(String s) {
-        char[] sChars = s.toCharArray();
-        int wordStart = 0;
-        for(int i=0; i<sChars.length; i++){
-            char ch = s.charAt(i);
-            if(ch == ' '){
-                reverseWord(sChars, wordStart, i-1);
-                wordStart = i+1;
-            }
-        }
-        reverseWord(sChars, wordStart, sChars.length-1);
+    public ListNode middleNode(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
         
-        return new String(sChars);
-    }
-    
-    public void reverseWord(char[] s, int start, int end){
-        while(start < end){
-            char tmp = s[start];
-            s[start] = s[end];
-            s[end] = tmp;
-            
-            start++;
-            end--;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
         }
+        
+        return slow;
     }
 }

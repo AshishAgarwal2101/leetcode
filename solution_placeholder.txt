@@ -1,91 +1,69 @@
-240. Search a 2D Matrix II::::::
+733. Flood Fill::::::::::
 
-Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
+An image is represented by an m x n integer grid image where image[i][j] represents the pixel value of the image.
 
-Integers in each row are sorted in ascending from left to right.
-Integers in each column are sorted in ascending from top to bottom.
+You are also given three integers sr, sc, and color. You should perform a flood fill on the image starting from the pixel image[sr][sc].
+
+To perform a flood fill, consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color), and so on. Replace the color of all of the aforementioned pixels with color.
+
+Return the modified image after performing the flood fill.
+
  
 
 Example 1:
 
-Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
-
-Output: true
+Input: image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, color = 2
+Output: [[2,2,2],[2,2,0],[2,0,1]]
+Explanation: From the center of the image with position (sr, sc) = (1, 1) (i.e., the red pixel), all pixels connected by a path of the same color as the starting pixel (i.e., the blue pixels) are colored with the new color.
+Note the bottom corner is not colored 2, because it is not 4-directionally connected to the starting pixel.
 
 Example 2:
 
-
-Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
-Output: false
+Input: image = [[0,0,0],[0,0,0]], sr = 0, sc = 0, color = 0
+Output: [[0,0,0],[0,0,0]]
+Explanation: The starting pixel is already colored 0, so no changes are made to the image.
  
 
 Constraints:
 
-m == matrix.length
-n == matrix[i].length
-1 <= n, m <= 300
--109 <= matrix[i][j] <= 109
-All the integers in each row are sorted in ascending order.
-All the integers in each column are sorted in ascending order.
--109 <= target <= 109
+m == image.length
+n == image[i].length
+1 <= m, n <= 50
+0 <= image[i][j], color < 216
+0 <= sr < m
+0 <= sc < n
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    //Solution 1: Efficient - eliminating parts where we are sure target won't be present
-    public boolean searchMatrix(int[][] matrix, int target) {
-        int rowCount = matrix.length;
-        int colCount = matrix[0].length;
+    int rowCount;
+    int colCount;
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        rowCount = image.length;
+        colCount = image[0].length;
+        boolean[][] visited = new boolean[rowCount][colCount];
+        flood(image, visited, sr, sc, image[sr][sc], color);
         
-        return isAvailable(matrix, 0, colCount-1, 0, rowCount-1, target);
+        return image;
     }
     
-    public boolean isAvailable(int[][] matrix, int left, int right, int top, int bottom, int target){
-        if(left > right || top > bottom){
-            return false;
+    public void flood(int[][] image, boolean[][] visited, int x, int y, int srcColor, int fillColor){
+        if(x<0 || x>=rowCount || y<0 || y>=colCount){
+            return;
         }
-        int midRow = (top+bottom)/2;
-        int midCol = (left+right)/2;
-        int cell = matrix[midRow][midCol];
-        if(target == cell){
-            return true;
+        if(visited[x][y] == true){
+            return;
         }
-        if(target < cell){
-            boolean one = isAvailable(matrix, left, right, top, midRow-1, target);
-            boolean two = isAvailable(matrix, left, midCol-1, midRow, bottom, target);
-            
-            return one || two;
-        }
+        visited[x][y] = true;
         
-        boolean one = isAvailable(matrix, left, right, midRow+1, bottom, target);
-        boolean two = isAvailable(matrix, midCol+1, right, top, midRow, target);
-        
-        return one || two;
+        if(image[x][y] == srcColor){
+            image[x][y] = fillColor;
+            flood(image, visited, x-1, y, srcColor, fillColor);
+            flood(image, visited, x, y-1, srcColor, fillColor);
+            flood(image, visited, x+1, y, srcColor, fillColor);
+            flood(image, visited, x, y+1, srcColor, fillColor);
+        }
     }
-    
-    /* ------------ Solution 2: Using 2 pointer approach-----------
-    public boolean searchMatrix(int[][] matrix, int target) {
-        int rowCount = matrix.length;
-        int colCount = matrix[0].length;
-        
-        int rowI = 0;
-        int colI = matrix[0].length-1;
-        while(rowI < matrix.length && colI >= 0){
-            int cell = matrix[rowI][colI];
-            if(target == cell){
-                return true;
-            }
-            if(target < cell){
-                colI--;
-            }
-            else{
-                rowI++;
-            }
-        }
-        
-        return false;
-    }
-    */
 }

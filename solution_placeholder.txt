@@ -1,70 +1,62 @@
-2319. Check if Matrix Is X-Matrix:::::::::
+1143. Longest Common Subsequence::::::::::
 
-A square matrix is said to be an X-Matrix if both of the following conditions hold:
+Given two strings text1 and text2, return the length of their longest common subsequence. If there is no common subsequence, return 0.
 
-All the elements in the diagonals of the matrix are non-zero.
-All other elements are 0.
-Given a 2D integer array grid of size n x n representing a square matrix, return true if grid is an X-Matrix. Otherwise, return false.
+A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.
+
+For example, "ace" is a subsequence of "abcde".
+A common subsequence of two strings is a subsequence that is common to both strings.
 
  
 
 Example 1:
 
+Input: text1 = "abcde", text2 = "ace" 
+Output: 3  
+Explanation: The longest common subsequence is "ace" and its length is 3.
 
-Input: grid = [[2,0,0,1],[0,3,1,0],[0,5,2,0],[4,0,0,2]]
-Output: true
-Explanation: Refer to the diagram above. 
-An X-Matrix should have the green elements (diagonals) be non-zero and the red elements be 0.
-Thus, grid is an X-Matrix.
 Example 2:
 
+Input: text1 = "abc", text2 = "abc"
+Output: 3
+Explanation: The longest common subsequence is "abc" and its length is 3.
 
-Input: grid = [[5,7,0],[0,3,1],[0,5,0]]
-Output: false
-Explanation: Refer to the diagram above.
-An X-Matrix should have the green elements (diagonals) be non-zero and the red elements be 0.
-Thus, grid is not an X-Matrix.
+Example 3:
+
+Input: text1 = "abc", text2 = "def"
+Output: 0
+Explanation: There is no such common subsequence, so the result is 0.
  
 
 Constraints:
 
-n == grid.length == grid[i].length
-3 <= n <= 100
-0 <= grid[i][j] <= 105
+1 <= text1.length, text2.length <= 1000
+text1 and text2 consist of only lowercase English characters.
 
 *****************************************************************
 
 import java.util.*;
 
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
-    public boolean checkXMatrix(int[][] grid) {
-        int n = grid.length;
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                if((i == j || (i+j+1)==n)){ //diagonal
-                    if(grid[i][j] == 0) return false;
+    public int longestCommonSubsequence(String text1, String text2) {
+        char[] t1Chars = text1.toCharArray();
+        char[] t2Chars = text2.toCharArray();
+        int l1 = t1Chars.length;
+        int l2 = t2Chars.length;
+        int[][] dp = new int[l1+1][l2+1];
+        
+        for(int i=1; i<=l1; i++){
+            for(int j=1; j<=l2; j++){
+                //till i(th) length of text1, till j(th) length of text2
+                if(t1Chars[i-1] == t2Chars[j-1]){
+                    dp[i][j] = 1 + dp[i-1][j-1];
                 }
-                else{ //non-diagonal
-                    if(grid[i][j] != 0) return false;
+                else{
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
                 }
             }
         }
         
-        return true;
+        return dp[l1][l2];
     }
 }

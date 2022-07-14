@@ -1,99 +1,52 @@
-76. Minimum Window Substring:::::::::::::::::::::
+162. Find Peak Element:::::::::::::;
 
-Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".
+A peak element is an element that is strictly greater than its neighbors.
 
-The testcases will be generated such that the answer is unique.
+Given a 0-indexed integer array nums, find a peak element, and return its index. If the array contains multiple peaks, return the index to any of the peaks.
 
-A substring is a contiguous sequence of characters within the string.
+You may imagine that nums[-1] = nums[n] = -∞. In other words, an element is always considered to be strictly greater than a neighbor that is outside the array.
+
+You must write an algorithm that runs in O(log n) time.
 
  
 
 Example 1:
 
-Input: s = "ADOBECODEBANC", t = "ABC"
-Output: "BANC"
-Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
+Input: nums = [1,2,3,1]
+Output: 2
+Explanation: 3 is a peak element and your function should return the index number 2.
 
 Example 2:
 
-Input: s = "a", t = "a"
-Output: "a"
-Explanation: The entire string s is the minimum window.
-
-Example 3:
-
-Input: s = "a", t = "aa"
-Output: ""
-Explanation: Both 'a's from t must be included in the window.
-Since the largest window of s only has one 'a', return empty string.
+Input: nums = [1,2,1,3,5,6,4]
+Output: 5
+Explanation: Your function can return either index number 1 where the peak element is 2, or index number 5 where the peak element is 6.
  
 
 Constraints:
 
-m == s.length
-n == t.length
-1 <= m, n <= 105
-s and t consist of uppercase and lowercase English letters.
- 
-
-Follow up: Could you find an algorithm that runs in O(m + n) time?
+1 <= nums.length <= 1000
+-231 <= nums[i] <= 231 - 1
+nums[i] != nums[i + 1] for all valid i.
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    public String minWindow(String s, String t) {
-        if(s.length() < t.length()) return "";
-        
-        Map<Character, Integer> tMap = new HashMap<>();
-        for(int i=0; i<t.length(); i++){
-            char ch = t.charAt(i);
-            tMap.put(ch, tMap.getOrDefault(ch, 0)+1);
-        }
-        
-        int minLen = Integer.MAX_VALUE;
-        String minLenStr = "";
-        Map<Character, Integer> currMap = new HashMap<>();
-        initMap(currMap, tMap);
+    public int findPeakElement(int[] nums) {
         int start = 0;
-        int count = 0;
-        for(int i=0; i<s.length(); i++){
-            char ch = s.charAt(i);
-            if(currMap.containsKey(ch)){
-                int newChCount = currMap.get(ch)+1;
-                currMap.put(ch, newChCount);
-                if(newChCount <= tMap.get(ch)){
-                    count++;
-                }
+        int end = nums.length-1;
+        while(start < end){
+            int mid = (start+end)/2;
+            if(nums[mid] > nums[mid+1]){
+                end = mid; //there is definitely a peak element on the left side, including index mid
             }
-            
-            char chStart = s.charAt(start);
-            while(start<i && (!currMap.containsKey(chStart) || currMap.get(chStart)>tMap.get(chStart))){
-                if(currMap.containsKey(chStart) && currMap.get(chStart)>tMap.get(chStart)){
-                    currMap.put(chStart, currMap.get(chStart)-1);
-                }
-                //System.out.println("chStart="+chStart+"---count="+currMap.get(chStart));
-                start++;
-                chStart = s.charAt(start);
-            }
-            
-            if(count == t.length()){
-                //System.out.println("start="+start+"--i="+i);
-                int newLen = (i-start+1);
-                if(newLen < minLen){
-                    minLen = newLen;
-                    minLenStr = s.substring(start, i+1);
-                }
+            else{
+                start = mid+1; //there is definitely a peak elememnt on the right side
             }
         }
         
-        return minLenStr;
-    }
-    
-    public void initMap(Map<Character, Integer> map1, Map<Character, Integer> map2){
-        for(char ch:map2.keySet()){
-            map1.put(ch, 0);
-        }
+        return start; //start=mid at the end
     }
 }

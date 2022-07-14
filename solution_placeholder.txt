@@ -1,55 +1,60 @@
-209. Minimum Size Subarray Sum:::::::::::::::::
+547. Number of Provinces::::::::::::
 
-Given an array of positive integers nums and a positive integer target, return the minimal length of a contiguous subarray [numsl, numsl+1, ..., numsr-1, numsr] of which the sum is greater than or equal to target. If there is no such subarray, return 0 instead.
+There are n cities. Some of them are connected, while some are not. If city a is connected directly with city b, and city b is connected directly with city c, then city a is connected indirectly with city c.
 
+A province is a group of directly or indirectly connected cities and no other cities outside of the group.
 
+You are given an n x n matrix isConnected where isConnected[i][j] = 1 if the ith city and the jth city are directly connected, and isConnected[i][j] = 0 otherwise.
+
+Return the total number of provinces.
+
+ 
 Example 1:
 
-Input: target = 7, nums = [2,3,1,2,4,3]
+Input: isConnected = [[1,1,0],[1,1,0],[0,0,1]]
 Output: 2
-Explanation: The subarray [4,3] has the minimal length under the problem constraint.
 
 Example 2:
 
-Input: target = 4, nums = [1,4,4]
-Output: 1
-
-Example 3:
-
-Input: target = 11, nums = [1,1,1,1,1,1,1,1]
-Output: 0
+Input: isConnected = [[1,0,0],[0,1,0],[0,0,1]]
+Output: 3
  
 
 Constraints:
 
-1 <= target <= 109
-1 <= nums.length <= 105
-1 <= nums[i] <= 104
- 
-
-Follow up: If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log(n)).
+1 <= n <= 200
+n == isConnected.length
+n == isConnected[i].length
+isConnected[i][j] is 1 or 0.
+isConnected[i][i] == 1
+isConnected[i][j] == isConnected[j][i]
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    public int minSubArrayLen(int target, int[] nums) {
-        int currSum = 0;
-        int start = 0;
-        int minLen = Integer.MAX_VALUE;
-        for(int i=0; i<nums.length; i++){
-            currSum += nums[i];
-            while(start <= i && (currSum-nums[start]) >= target){
-                currSum -= nums[start];
-                start++;
-            }
-            if(currSum >= target && (i-start+1) < minLen){
-                minLen = i - start + 1;
+    public int findCircleNum(int[][] isConnected) {
+        boolean[] visited = new boolean[isConnected.length];
+        int count = 0;
+        for(int i=0; i<visited.length; i++){
+            if(!visited[i]){
+                markVisited(isConnected, visited, i);
+                count++;
             }
         }
         
-        if(minLen == Integer.MAX_VALUE) return 0;
-        return minLen;
+        return count;
+    }
+    
+    public void markVisited(int[][] isConnected, boolean[] visited, int x){
+        if(visited[x]) return;
+        
+        visited[x] = true; //city 'x' is now visited
+        for(int i=0; i<visited.length; i++){
+            if(!visited[i] && isConnected[x][i] == 1){
+                markVisited(isConnected, visited, i);
+            }
+        }
     }
 }

@@ -1,68 +1,45 @@
-79. Word Search::::::::::::::::::
+413. Arithmetic Slices::::::::::::::::::::
 
-Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+An integer array is called arithmetic if it consists of at least three elements and if the difference between any two consecutive elements is the same.
 
-The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
+For example, [1,3,5,7,9], [7,7,7,7], and [3,-1,-5,-9] are arithmetic sequences.
+Given an integer array nums, return the number of arithmetic subarrays of nums.
+
+A subarray is a contiguous subsequence of the array.
 
 
 Example 1:
 
-Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
-Output: true
+Input: nums = [1,2,3,4]
+Output: 3
+Explanation: We have 3 arithmetic slices in nums: [1, 2, 3], [2, 3, 4] and [1,2,3,4] itself.
+
 Example 2:
 
-
-Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
-Output: true
-Example 3:
-
-
-Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
-Output: false
+Input: nums = [1]
+Output: 0
  
 
 Constraints:
 
-m == board.length
-n = board[i].length
-1 <= m, n <= 6
-1 <= word.length <= 15
-board and word consists of only lowercase and uppercase English letters.
- 
-
-Follow up: Could you use search pruning to make your solution faster with a larger board?
+1 <= nums.length <= 5000
+-1000 <= nums[i] <= 1000
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    public boolean exist(char[][] board, String word) {
-        char[] letters = word.toCharArray();
-        boolean[][] visited = new boolean[board.length][board[0].length];
-        
-        for(int i=0; i<board.length; i++){
-            for(int j=0; j<board[i].length; j++){
-                if(isAvailable(board, letters, visited, i, j, 0)) return true;
+    public int numberOfArithmeticSlices(int[] nums) {
+        int res = 0;
+        int count = 0;
+        for(int i=2; i<nums.length; i++){
+            if(nums[i]-nums[i-1] == nums[i-1]-nums[i-2]){ //checking for 3 consecutive integers
+                count++;
+                res += count;
             }
+            else count = 0;
         }
-        
-        return false;
-    }
-    
-    public boolean isAvailable(char[][] board, char[] letters, boolean[][] visited, int x, int y, int wordIndex){
-        if(wordIndex == letters.length) return true;
-        if(x<0 || x>=board.length || y<0 || y>=board[0].length) return false;
-        if(visited[x][y]) return false;
-        if(board[x][y] != letters[wordIndex]) return false;
-        
-        visited[x][y] = true;
-        boolean res = isAvailable(board, letters, visited, x, y-1, wordIndex+1)
-            || isAvailable(board, letters, visited, x, y+1, wordIndex+1)
-            || isAvailable(board, letters, visited, x-1, y, wordIndex+1)
-            || isAvailable(board, letters, visited, x+1, y, wordIndex+1);
-        //System.out.println("x="+x+"---y="+y+"---res="+res);
-        visited[x][y] = false;
         
         return res;
     }

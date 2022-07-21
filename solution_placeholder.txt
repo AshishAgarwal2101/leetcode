@@ -1,65 +1,43 @@
-343. Integer Break:::::::::::::
+201. Bitwise AND of Numbers Range::::::::
 
-Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
-
-Return the maximum product you can get.
-
+Given two integers left and right that represent the range [left, right], return the bitwise AND of all numbers in this range, inclusive.
 
 Example 1:
 
-Input: n = 2
-Output: 1
-Explanation: 2 = 1 + 1, 1 × 1 = 1.
+Input: left = 5, right = 7
+Output: 4
 
 Example 2:
 
-Input: n = 10
-Output: 36
-Explanation: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36.
+Input: left = 0, right = 0
+Output: 0
+
+Example 3:
+
+Input: left = 1, right = 2147483647
+Output: 0
  
 
 Constraints:
 
-2 <= n <= 58
+0 <= left <= right <= 231 - 1
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    /*--------Solution 1: DP: Knowing that max possible break int is 4-----------*/
-    public int integerBreak(int n) {
-        if(n == 2) return 1;
-        if(n == 3) return 2;
-        if(n == 4) return 4;
-        int[] dp = new int[n+1];
-        dp[1] = 1;
-        dp[2] = 2;
-        dp[3] = 3;
-        dp[4] = 4;
-        for(int i=5; i<=n; i++){
-            dp[i] = 1*dp[i-1];
-            dp[i] = Math.max(dp[i], 2*dp[i-2]);
-            dp[i] = Math.max(dp[i], 3*dp[i-3]);
-            dp[i] = Math.max(dp[i], 4*dp[i-4]);
+    public int rangeBitwiseAnd(int left, int right) {
+        int count = 0;
+        
+        //extract common left bits - this will move to the rightmost part
+        while(left != right){
+            left >>= 1;
+            right >>= 1;
+            count++;
         }
         
-        return dp[n];
+        //moving the common bits to original position
+        return left <<= count; 
     }
-    
-    /*-------------Solution 2: Normal DP-----------------
-    public int integerBreak(int n) {
-        if(n == 2) return 1;
-        int[] dp = new int[n+1];
-        dp[1] = 1;
-        for(int i=2; i<=n; i++){
-            for(int j=1; j<i; j++){ //'j' becomes one integer break
-                int productAfterJBreak = Math.max(dp[i-j], (i-j)) * j;
-                dp[i] = Math.max(dp[i], productAfterJBreak);
-            }
-        }
-        
-        return dp[n];
-    }
-    */
 }

@@ -1,55 +1,76 @@
-204. Count Primes::::::::::::::::
+38. Count and Say:::::::::::::
 
-Given an integer n, return the number of prime numbers that are strictly less than n.
+The count-and-say sequence is a sequence of digit strings defined by the recursive formula:
+
+countAndSay(1) = "1"
+countAndSay(n) is the way you would "say" the digit string from countAndSay(n-1), which is then converted into a different digit string.
+To determine how you "say" a digit string, split it into the minimal number of substrings such that each substring contains exactly one unique digit. Then for each substring, say the number of digits, then say the digit. Finally, concatenate every said digit.
+
+For example, the saying and conversion for digit string "3322251":
+
+
+Given a positive integer n, return the nth term of the count-and-say sequence.
+ 
 
 Example 1:
 
-Input: n = 10
-Output: 4
-Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+Input: n = 1
+Output: "1"
+Explanation: This is the base case.
 
 Example 2:
 
-Input: n = 0
-Output: 0
-
-Example 3:
-
-Input: n = 1
-Output: 0
+Input: n = 4
+Output: "1211"
+Explanation:
+countAndSay(1) = "1"
+countAndSay(2) = say "1" = one 1 = "11"
+countAndSay(3) = say "11" = two 1's = "21"
+countAndSay(4) = say "21" = one 2 + one 1 = "12" + "11" = "1211"
  
 
 Constraints:
 
-0 <= n <= 5 * 106
+1 <= n <= 30
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    public int countPrimes(int n) {
-        //Sieve of Eratosthenus
-        boolean[] isPrime = new boolean[n];
-        for(int i=2; i<n; i++){
-            isPrime[i] = true;
+    public String countAndSay(int n) {
+        String[] says = new String[n+1];
+        says[1] = "1";
+        for(int i=2; i<=n; i++){
+            says[i] = say(says[i-1]);
         }
         
-        //find primes
-        for(int i=2; i*i<n; i++){
-            if(isPrime[i]){
-                for(int j=i*2; j<n; j+=i){
-                    isPrime[j] = false;
+        return says[n];
+    }
+    
+    public String say(String s){
+        char prevCh = 'a';
+        int currCount = 0;
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<s.length(); i++){
+            char ch = s.charAt(i);
+            if(ch != prevCh){
+                if(currCount > 0){
+                    sb.append(currCount+"");
+                    sb.append(prevCh);
                 }
+                prevCh = ch;
+                currCount = 1;
+            }
+            else{
+                currCount++;
             }
         }
-        
-        //count primes
-        int count = 0;
-        for(int i=2; i<n; i++){
-            if(isPrime[i]) count++;
+        if(currCount > 0){
+            sb.append(currCount+"");
+            sb.append(prevCh);
         }
         
-        return count;
+        return sb.toString();
     }
 }

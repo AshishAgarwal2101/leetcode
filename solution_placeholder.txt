@@ -1,59 +1,69 @@
-237. Delete Node in a Linked List:::::::::::::
+26. Remove Duplicates from Sorted Array:::::::::::
 
-There is a singly-linked list head and we want to delete a node node in it.
+Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears only once. The relative order of the elements should be kept the same.
 
-You are given the node to be deleted node. You will not be given access to the first node of head.
+Since it is impossible to change the length of the array in some languages, you must instead have the result be placed in the first part of the array nums. More formally, if there are k elements after removing the duplicates, then the first k elements of nums should hold the final result. It does not matter what you leave beyond the first k elements.
 
-All the values of the linked list are unique, and it is guaranteed that the given node node is not the last node in the linked list.
+Return k after placing the final result in the first k slots of nums.
 
-Delete the given node. Note that by deleting the node, we do not mean removing it from memory. We mean:
+Do not allocate extra space for another array. You must do this by modifying the input array in-place with O(1) extra memory.
 
-The value of the given node should not exist in the linked list.
-The number of nodes in the linked list should decrease by one.
-All the values before node should be in the same order.
-All the values after node should be in the same order.
-Custom testing:
+Custom Judge:
 
-For the input, you should provide the entire linked list head and the node to be given node. node should not be the last node of the list and should be an actual node in the list.
-We will build the linked list and pass the node to your function.
-The output will be the entire list after calling your function.
+The judge will test your solution with the following code:
+
+int[] nums = [...]; // Input array
+int[] expectedNums = [...]; // The expected answer with correct length
+
+int k = removeDuplicates(nums); // Calls your implementation
+
+assert k == expectedNums.length;
+for (int i = 0; i < k; i++) {
+    assert nums[i] == expectedNums[i];
+}
+If all assertions pass, then your solution will be accepted.
+
  
 
 Example 1:
 
-Input: head = [4,5,1,9], node = 5
-Output: [4,1,9]
-Explanation: You are given the second node with value 5, the linked list should become 4 -> 1 -> 9 after calling your function.
+Input: nums = [1,1,2]
+Output: 2, nums = [1,2,_]
+Explanation: Your function should return k = 2, with the first two elements of nums being 1 and 2 respectively.
+It does not matter what you leave beyond the returned k (hence they are underscores).
 
 Example 2:
 
-Input: head = [4,5,1,9], node = 1
-Output: [4,5,9]
-Explanation: You are given the third node with value 1, the linked list should become 4 -> 5 -> 9 after calling your function.
+Input: nums = [0,0,1,1,1,2,2,3,3,4]
+Output: 5, nums = [0,1,2,3,4,_,_,_,_,_]
+Explanation: Your function should return k = 5, with the first five elements of nums being 0, 1, 2, 3, and 4 respectively.
+It does not matter what you leave beyond the returned k (hence they are underscores).
  
 
 Constraints:
 
-The number of the nodes in the given list is in the range [2, 1000].
--1000 <= Node.val <= 1000
-The value of each node in the list is unique.
-The node to be deleted is in the list and is not a tail node.
+1 <= nums.length <= 3 * 104
+-100 <= nums[i] <= 100
+nums is sorted in non-decreasing order.
 
 *****************************************************************
 
 import java.util.*;
 
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
 class Solution {
-    public void deleteNode(ListNode node) {
-        node.val = node.next.val;
-        node.next = node.next.next;
+    public int removeDuplicates(int[] nums) {
+        int lastNum = 101; //impossible number
+        int pos = 0;
+        for(int i=0; i<nums.length; i++){
+            while(i<nums.length-1 && nums[i]==lastNum){
+                i++;
+            }
+            if(nums[i] != lastNum){
+                nums[pos++] = nums[i];
+                lastNum = nums[i];
+            }
+        }
+        
+        return pos;
     }
 }

@@ -1,85 +1,59 @@
-1444. Number of Ways of Cutting a Pizza:::::::::::::
+237. Delete Node in a Linked List:::::::::::::
 
-Given a rectangular pizza represented as a rows x cols matrix containing the following characters: 'A' (an apple) and '.' (empty cell) and given the integer k. You have to cut the pizza into k pieces using k-1 cuts. 
+There is a singly-linked list head and we want to delete a node node in it.
 
-For each cut you choose the direction: vertical or horizontal, then you choose a cut position at the cell boundary and cut the pizza into two pieces. If you cut the pizza vertically, give the left part of the pizza to a person. If you cut the pizza horizontally, give the upper part of the pizza to a person. Give the last piece of pizza to the last person.
+You are given the node to be deleted node. You will not be given access to the first node of head.
 
-Return the number of ways of cutting the pizza such that each piece contains at least one apple. Since the answer can be a huge number, return this modulo 10^9 + 7.
+All the values of the linked list are unique, and it is guaranteed that the given node node is not the last node in the linked list.
 
+Delete the given node. Note that by deleting the node, we do not mean removing it from memory. We mean:
+
+The value of the given node should not exist in the linked list.
+The number of nodes in the linked list should decrease by one.
+All the values before node should be in the same order.
+All the values after node should be in the same order.
+Custom testing:
+
+For the input, you should provide the entire linked list head and the node to be given node. node should not be the last node of the list and should be an actual node in the list.
+We will build the linked list and pass the node to your function.
+The output will be the entire list after calling your function.
  
 
 Example 1:
 
-Input: pizza = ["A..","AAA","..."], k = 3
-Output: 3 
-Explanation: The figure above shows the three ways to cut the pizza. Note that pieces must contain at least one apple.
+Input: head = [4,5,1,9], node = 5
+Output: [4,1,9]
+Explanation: You are given the second node with value 5, the linked list should become 4 -> 1 -> 9 after calling your function.
 
 Example 2:
 
-Input: pizza = ["A..","AA.","..."], k = 3
-Output: 1
-
-Example 3:
-
-Input: pizza = ["A..","A..","..."], k = 1
-Output: 1
+Input: head = [4,5,1,9], node = 1
+Output: [4,5,9]
+Explanation: You are given the third node with value 1, the linked list should become 4 -> 5 -> 9 after calling your function.
  
 
 Constraints:
 
-1 <= rows, cols <= 50
-rows == pizza.length
-cols == pizza[i].length
-1 <= k <= 10
-pizza consists of characters 'A' and '.' only.
-
+The number of the nodes in the given list is in the range [2, 1000].
+-1000 <= Node.val <= 1000
+The value of each node in the list is unique.
+The node to be deleted is in the list and is not a tail node.
 
 *****************************************************************
 
 import java.util.*;
 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
 class Solution {
-    public int ways(String[] pizza, int k) {
-        int rows = pizza.length;
-        int cols = pizza[0].length();
-        int[][] numApples = new int[rows+1][cols+1]; //numApples[i][j] = num of apples from 'i' to (rows-1) and from 'j' to (cols-1)
-        Integer[][][] mem = new Integer[k][rows][cols];
-        
-        for(int i=rows-1; i>=0; i--){
-            for(int j=cols-1; j>=0; j--){
-                numApples[i][j] = numApples[i+1][j] + numApples[i][j+1] - numApples[i+1][j+1] 
-                    + (pizza[i].charAt(j) == 'A' ? 1 : 0);
-            }
-        }
-        
-        return recurse(numApples, mem, 0, 0, k-1, rows, cols);
-    }
-    
-    public int recurse(int[][] numApples, Integer[][][] mem, int i, int j, int k, int rows, int cols){
-        if(numApples[i][j] == 0){ //remaining piece has no apples
-            return 0;
-        }
-        if(k == 0){ //completed all cuts
-            return 1;
-        }
-        if(mem[k][i][j] != null){ //already found before
-            return mem[k][i][j];
-        }
-        
-        mem[k][i][j] = 0;
-        for(int newR=i+1; newR<rows; newR++){
-            if(numApples[i][j] - numApples[newR][j] > 0){ //only cut if upper part has at least an apple
-                int next = recurse(numApples, mem, newR, j, k-1, rows, cols);
-                mem[k][i][j] = (mem[k][i][j] + next) % 1000000007;
-            }
-        }
-        for(int newC=j+1; newC<cols; newC++){
-            if(numApples[i][j] - numApples[i][newC] > 0){ //only cut if left part has at least an apple
-                int next = recurse(numApples, mem, i, newC, k-1, rows, cols);
-                mem[k][i][j] = (mem[k][i][j] + next) % 1000000007;
-            }
-        }
-        
-        return mem[k][i][j];
+    public void deleteNode(ListNode node) {
+        node.val = node.next.val;
+        node.next = node.next.next;
     }
 }

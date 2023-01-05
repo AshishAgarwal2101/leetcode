@@ -1,55 +1,87 @@
-746. Min Cost Climbing Stairs::::::::::::::
+452. Minimum Number of Arrows to Burst Balloons:::::::::::::::::
 
-You are given an integer array cost where cost[i] is the cost of ith step on a staircase. Once you pay the cost, you can either climb one or two steps.
+There are some spherical balloons taped onto a flat wall that represents the XY-plane. The balloons are represented as a 2D integer array points where points[i] = [xstart, xend] denotes a balloon whose horizontal diameter stretches between xstart and xend. You do not know the exact y-coordinates of the balloons.
 
-You can either start from the step with index 0, or the step with index 1.
+Arrows can be shot up directly vertically (in the positive y-direction) from different points along the x-axis. A balloon with xstart and xend is burst by an arrow shot at x if xstart <= x <= xend. There is no limit to the number of arrows that can be shot. A shot arrow keeps traveling up infinitely, bursting any balloons in its path.
 
-Return the minimum cost to reach the top of the floor.
-
- 
+Given the array points, return the minimum number of arrows that must be shot to burst all balloons.
 
 Example 1:
 
-Input: cost = [10,15,20]
-Output: 15
-Explanation: You will start at index 1.
-- Pay 15 and climb two steps to reach the top.
-The total cost is 15.
+Input: points = [[10,16],[2,8],[1,6],[7,12]]
+Output: 2
+Explanation: The balloons can be burst by 2 arrows:
+- Shoot an arrow at x = 6, bursting the balloons [2,8] and [1,6].
+- Shoot an arrow at x = 11, bursting the balloons [10,16] and [7,12].
 
 Example 2:
 
-Input: cost = [1,100,1,1,1,100,1,1,100,1]
-Output: 6
-Explanation: You will start at index 0.
-- Pay 1 and climb two steps to reach index 2.
-- Pay 1 and climb two steps to reach index 4.
-- Pay 1 and climb two steps to reach index 6.
-- Pay 1 and climb one step to reach index 7.
-- Pay 1 and climb two steps to reach index 9.
-- Pay 1 and climb one step to reach the top.
-The total cost is 6.
+Input: points = [[1,2],[3,4],[5,6],[7,8]]
+Output: 4
+Explanation: One arrow needs to be shot for each balloon for a total of 4 arrows.
+Example 3:
+
+Input: points = [[1,2],[2,3],[3,4],[4,5]]
+Output: 2
+Explanation: The balloons can be burst by 2 arrows:
+- Shoot an arrow at x = 2, bursting the balloons [1,2] and [2,3].
+- Shoot an arrow at x = 4, bursting the balloons [3,4] and [4,5].
  
 
 Constraints:
 
-2 <= cost.length <= 1000
-0 <= cost[i] <= 999
+1 <= points.length <= 105
+points[i].length == 2
+-231 <= xstart < xend <= 231 - 1
 
 *****************************************************************
 
 import java.util.*;
 
 class Solution {
-    public int minCostClimbingStairs(int[] cost) {
-        int[] dp = new int[cost.length+1];
-        dp[0] = 0;
-        dp[1] = 0;
-        for(int i=2; i<dp.length; i++){
-            int optionOne = dp[i-2] + cost[i-2];
-            int optionTwo = dp[i-1] + cost[i-1];
-            dp[i] = Math.min(optionOne, optionTwo);
+    class Node implements Comparable<Node> {
+        int left, right;
+        public Node(int left, int right){
+            this.left = left;
+            this.right = right;
         }
 
-        return dp[dp.length-1];
+        public int compareTo(Node node){
+            if(this.left < node.left) return -1;
+            if(this.left > node.left) return 1;
+            if(this.right < node.right) return -1;
+            if(this.right > node.right) return 1;
+            return 0;
+        }
+    }
+    
+    public int findMinArrowShots(int[][] points) {
+        PriorityQueue<Node> minHeap = new PriorityQueue<>();
+        for(int i=0; i<points.length; i++){
+            int start = points[i][0];
+            int end = points[i][1];
+            Node node = new Node(start, end);
+            minHeap.add(node);
+        }
+
+        return getNumShots(minHeap);
+    }
+
+    public int getNumShots(PriorityQueue<Node> minHeap){
+        if(minHeap.size() == 0) return 0;
+        Node lastNode = minHeap.remove();
+        int numShots = 1;
+        while(!minHeap.isEmpty()){
+            Node currNode = minHeap.remove();
+            if(lastNode.right >= currNode.left){
+                lastNode.right = Math.min(lastNode.right, currNode.right);
+            }
+            else{
+                numShots++;
+                lastNode = currNode;
+            }
+        }
+
+        return numShots;
     }
 }
